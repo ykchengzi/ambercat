@@ -1,0 +1,16 @@
+# 工单附件目录：继承父级 admin/uploads/.htaccess 的禁脚本规则
+# 这里仅作冗余防御，避免父级配置被误删时仍能阻断脚本执行
+Options -ExecCGI -Indexes
+<FilesMatch "\.(php|phtml|php3|php4|php5|php7|php8|phps|phar|pht|cgi|pl|py|jsp|jspx|asp|aspx|ashx|sh|bash|exe|dll|so|svg|js|html?|htm)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+<IfModule mod_mime.c>
+    RemoveHandler .php .phtml .phar .pht .cgi .pl .py .jsp .asp .aspx .sh
+    RemoveType .php .phtml .phar .pht
+</IfModule>

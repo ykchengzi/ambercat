@@ -1,0 +1,7 @@
+# Protect internal PHP includes from direct access
+<Files "common.php">
+    Deny from all
+</Files>
+<Files "_sidebar.php">
+    Deny from all
+</Files>

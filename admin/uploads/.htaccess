@@ -1,0 +1,32 @@
+# 上传目录硬性禁止任何脚本执行（防御 image/PHP 多语言文件、Apache mod_mime 错配等）
+
+# 1) 直接拒绝访问任何潜在可执行扩展
+<FilesMatch "\.(php|phtml|php3|php4|php5|php7|php8|phps|phar|pht|cgi|pl|py|jsp|jspx|asp|aspx|ashx|sh|bash|exe|dll|so)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# 2) 禁用 CGI / 关闭目录索引
+Options -ExecCGI -Indexes
+
+# 3) 解除常见脚本 handler，防止 AddHandler 在父级被错误打开
+<IfModule mod_mime.c>
+    RemoveHandler .php .phtml .phar .pht .cgi .pl .py .jsp .asp .aspx .sh
+    RemoveType .php .phtml .phar .pht
+</IfModule>
+
+# 4) 任何 .ht* 文件不可访问
+<FilesMatch "^\.ht">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
