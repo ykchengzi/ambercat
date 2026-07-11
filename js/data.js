@@ -121,11 +121,10 @@ window.__FOXMC_STATIC_DATA__ = {
   },
 
   // ---- 服务器在线状态 ----
-  // 模式: "static" 显示固定文字; "api" 调用开放 API 拉取真实数据
-  // GET /open-api/players → 返回 { code, players: [{name, isOnline, uuid, gamemode}] }
+  // "api" 模式通过 allorigins.win 代理解决跨域
   server_status: {
     mode: "api",
-    api_url: "http://chengmao.jkun.cf:36779/open-api/players",
+    api_url: "https://api.allorigins.win/raw?url=http://chengmao.jkun.cf:36779/open-api/players",
     api_key: "",
     // 静态模式下的兜底显示
     static_text: "最大在线",
