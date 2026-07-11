@@ -84,8 +84,8 @@ window.__FOXMC_STATIC_DATA__ = {
     title:    "管理团队",
     subtitle: "热爱 Minecraft 的运营者，用心维护这片方块世界",
     members: [
-      { name: "腐竹",       role: "Server Owner",    desc: "橙猫服务器的创建者与维护者，负责服务器整体运营。", avatar: "./egg/cat.jpg",  contact_link: "#" },
-      { name: "管理员",     role: "Admin",           desc: "协助腐竹管理服务器日常事务，维护游戏秩序。",       avatar: "./egg/cat2.jpg", contact_link: "#" }
+      { name: "腐竹",       role: "Server Owner",    desc: "橙猫服务器的创建者与维护者，负责服务器整体运营。", avatar: "./egg/cat.jpg",  contact_link: "mailto:admin@ambercat.top" },
+      { name: "管理员",     role: "Admin",           desc: "协助腐竹管理服务器日常事务，维护游戏秩序。",       avatar: "./egg/cat2.jpg", contact_link: "mailto:3665822645@qq.com" }
     ]
   },
 
@@ -93,15 +93,11 @@ window.__FOXMC_STATIC_DATA__ = {
   community: {
     bg_image:      "./png/wj Narcissa 3.png",
     title:          "加入社区",
-    subtitle:       "加入 QQ 群获取白名单，与玩家实时交流",
+    subtitle:       "扫描二维码加入 QQ 群，与玩家实时交流",
     qq_text:        "官方QQ群",
     qq_desc:        "获取白名单、最新公告，与服务器玩家实时交流",
-    qq_qr:          "",
-    qq_link:        "https://qm.qq.com/cgi-bin/qm/qr?k=992719293",
-    wechat_text:    "官网访问",
-    wechat_desc:    "了解更多服务器信息，查看网页地图",
-    wechat_qr:      "",
-    wechat_link:    "https://www.ambercat.top"
+    qq_qr:          "./egg/qq_qr.jpg",
+    qq_link:        "https://qm.qq.com/cgi-bin/qm/qr?k=992719293"
   },
 
   // ---- 页脚 ----
@@ -125,8 +121,13 @@ window.__FOXMC_STATIC_DATA__ = {
   },
 
   // ---- 服务器在线状态 ----
+  // 模式: "static" 显示固定文字; "api" 调用开放 API 拉取真实数据
+  // GET /open-api/players → 返回 { code, players: [{name, isOnline, uuid, gamemode}] }
   server_status: {
-    mode: "static",
+    mode: "api",
+    api_url: "http://chengmao.jkun.cf:36779/open-api/players",
+    api_key: "",
+    // 静态模式下的兜底显示
     static_text: "最大在线",
     static_value: "2026"
   },

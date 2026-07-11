@@ -44,7 +44,7 @@
       }
     }
     </script>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🟩</text></svg>">
+    <link rel="icon" type="image/png" href="png/icon.png">
 </head>
 <body>
     <!-- SVG Sprite -->
@@ -58,7 +58,7 @@
     <nav class="navbar">
         <div class="container nav-container">
             <a href="#" class="logo" id="siteLogo">
-                <svg class="logo-svg" width="32" height="32"><use href="#icon-cube"/></svg>
+                <img class="logo-svg" src="png/icon.png" alt="logo" width="32" height="32" style="border-radius:6px;">
                 <span class="logo-text">橙猫生存服务器</span>
             </a>
             
@@ -76,7 +76,8 @@
                 <li><a href="#gallery">相册</a></li>
                 <li><a href="#team">团队</a></li>
                 <li><a href="#contact">联系</a></li>
-                <li><a href="#community">社区</a></li>
+                                <li><a href="#community">社区</a></li>
+                <li><a href="players.html" class="nav-players-link">在线玩家</a></li>
             </ul>
         </div>
     </nav>
@@ -110,28 +111,30 @@
                     在线奖励送点券，累计时长领大奖！
                 </div>
                 
-                <!-- 在线状态指示器 (新增) -->
+                <!-- 在线状态指示器 -->
                 <div class="server-status scroll-fade-up delay-200">
                     <span class="status-dot"></span>
-                    <span class="status-text">服务器在线: <span class="highlight-green">加载中...</span> 玩家</span>
+                    <a href="players.html" class="status-text-link">
+                        <span class="status-text">服务器在线: <span class="highlight-green">加载中…</span></span>
+                    </a>
                 </div>
 
                 <!-- 主标题 -->
                 <h1 class="scroll-fade-up delay-300">
                     欢迎来到<br>
-                    <span class="highlight">小狐狸生存服</span>
+                                            <span class="highlight">橙猫生存服务器</span>
                 </h1>
                 
                 <!-- 副标题 -->
-                <p class="hero-subtitle scroll-fade-up delay-400">
-                    由专业团队倾力打造的大型多人在线游戏，为您带来高质量的游戏体验
-                </p>
+                    <p class="hero-subtitle scroll-fade-up delay-400">
+                        一个纯粹、温馨、持久的 Minecraft 生存家园，Java 版与基岩版跨版本互通
+                    </p>
 
                 <!-- 特性列表 -->
                 <div class="hero-features scroll-fade-up delay-500">
-                    <div class="h-feature"><svg width="16" height="16"><use href="#icon-check"/></svg>不逼氪</div>
-                    <div class="h-feature"><svg width="16" height="16"><use href="#icon-check"/></svg>支持生电</div>
-                    <div class="h-feature"><svg width="16" height="16"><use href="#icon-check"/></svg>腐竹女装</div>
+                    <div class="h-feature"><svg width="16" height="16"><use href="#icon-check"/></svg>多版本支持</div>
+                    <div class="h-feature"><svg width="16" height="16"><use href="#icon-check"/></svg>跨版本互通</div>
+                    <div class="h-feature"><svg width="16" height="16"><use href="#icon-check"/></svg>领地保护</div>
                 </div>
 
                 <!-- 按钮组 -->
@@ -150,7 +153,7 @@
                             <span>已复制!</span>
                         </div>
                     </label>
-                    <span id="server-ip">play.example.com</span>
+                                        <span id="server-ip">mc.ambercat.top</span>
                     
                     <a href="#community" class="btn btn-secondary">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4H20V20H4V4Z"/><path d="M4 9H20"/></svg>
@@ -165,37 +168,37 @@
     <section id="specs" class="specs-section" data-bg="url('./png/89ce487b74da31797c19a3dc4ffc0d79.jpg')">
         <div class="container">
             <div class="section-header scroll-fade-up">
-                <h2 class="section-title">服务器配置</h2>
-                <p class="section-subtitle">为了给您提供最流畅的游戏体验，我们不惜成本选用了顶级的企业级硬件设施</p>
+                <h2 class="section-title">服务器信息</h2>
+                <p class="section-subtitle">了解我们的服务器基础配置与参数</p>
             </div>
             
             <div class="specs-grid">
                 <!-- CPU Card -->
                 <div class="spec-card scroll-fade-up delay-100">
-                    <h3 class="spec-title">高频处理器</h3>
-                    <p class="spec-desc">Intel Core i9-14900K 超频至 6.0GHz，单核性能极致释放</p>
-                    <div class="spec-value">i9-14900K</div>
+                    <h3 class="spec-title">游戏版本</h3>
+                    <p class="spec-desc">主版本 1.21.11，基于 Leaves 服务端，支持 ≥1.9 的多个版本进入</p>
+                    <div class="spec-value">1.21.11</div>
                 </div>
 
                 <!-- RAM Card -->
                 <div class="spec-card scroll-fade-up delay-200">
-                    <h3 class="spec-title">运行内存</h3>
-                    <p class="spec-desc">128GB DDR5 6000MHz ECC 纠错内存，告别卡顿与崩溃</p>
-                    <div class="spec-value">128GB DDR5</div>
+                    <h3 class="spec-title">服务器类型</h3>
+                    <p class="spec-desc">纯净生存服，支持 Java 版与基岩版跨版本互通，可与好友一起探索世界</p>
+                    <div class="spec-value">纯净生存</div>
                 </div>
 
                 <!-- Network Card -->
                 <div class="spec-card scroll-fade-up delay-300">
-                    <h3 class="spec-title">网络带宽</h3>
-                    <p class="spec-desc">三线 BGP 优化线路，千兆上下行对等带宽，低延迟畅玩</p>
-                    <div class="spec-value">1Gbps BGP</div>
+                    <h3 class="spec-title">基岩版地址</h3>
+                    <p class="spec-desc">基岩版玩家可通过 be.ambercat.top 加入，端口 40078</p>
+                    <div class="spec-value">be.ambercat.top</div>
                 </div>
 
                 <!-- Storage Card -->
                 <div class="spec-card scroll-fade-up delay-400">
-                    <h3 class="spec-title">高速存储</h3>
-                    <p class="spec-desc">企业级 NVMe SSD RAID 10 阵列，地图加载瞬间完成</p>
-                    <div class="spec-value">NVMe RAID 10</div>
+                    <h3 class="spec-title">网页地图</h3>
+                    <p class="spec-desc">随时随地通过浏览器查看服务器地图，地址 maps.ambercat.top</p>
+                    <div class="spec-value">网页地图</div>
                 </div>
             </div>
         </div>
@@ -206,7 +209,7 @@
         <div class="container">
             <div class="section-header scroll-fade-up">
                 <h2 class="section-title">如何加入服务器</h2>
-                <p class="section-subtitle">简单三步，即刻开启您在方块世界的奇幻冒险之旅</p>
+                <p class="section-subtitle">注意：服务器有白名单，需加入 Q 群联系腐竹获取</p>
             </div>
 
             <div class="steps-container">
@@ -220,9 +223,9 @@
                             <path d="M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
-                    <h3 class="step-title">下载启动器</h3>
-                    <p class="step-desc">我们需要MC启动器才能进入服务器。点击下方按钮下载启动器。</p>
-                    <a href="#" class="btn-step">下载启动器 (HMCL)</a>
+                    <h3 class="step-title">加入Q群</h3>
+                    <p class="step-desc">搜索 QQ 群 992719293 加入，联系腐竹申请白名单（需自愿赞助 ￥3.14）。</p>
+                    <a href="https://qm.qq.com/cgi-bin/qm/qr?k=992719293" class="btn-step">加入QQ群</a>
                 </div>
 
                 <!-- Arrow 1 -->
@@ -239,9 +242,9 @@
                         </svg>
                     </div>
                     <h3 class="step-title">添加服务器</h3>
-                    <p class="step-desc">启动游戏，选择“多人游戏” -> “添加服务器”，输入我们的服务器地址。</p>
+                    <p class="step-desc">启动 Minecraft，选择"多人游戏" -> "添加服务器"，输入 mc.ambercat.top。基岩版玩家使用 be.ambercat.top 端口 40078。</p>
                     <div class="server-address-box">
-                        <span id="help-ip">play.example.com</span>
+                        <span id="help-ip">mc.ambercat.top</span>
                         <button class="copy-btn">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -263,7 +266,7 @@
                         </svg>
                     </div>
                     <h3 class="step-title">进入游戏</h3>
-                    <p class="step-desc">双击服务器列表中的图标，即可连接进入服务器，开始您的探索！</p>
+                    <p class="step-desc">进入服务器后，使用 /dom 指令管理领地，保护你的赛博资产！</p>
                     <span class="highlight-text">祝您游戏愉快！</span>
                 </div>
             </div>
@@ -275,35 +278,35 @@
         <div class="container">
             <div class="section-header scroll-fade-up">
                 <h2 class="section-title">游戏特色</h2>
-                <p class="section-subtitle">探索我们精心打造的独特玩法与系统</p>
+                <p class="section-subtitle">探索橙猫生存服务器的独特玩法与系统</p>
             </div>
 
             <div class="features-grid">
                 <!-- Feature 1 -->
                 <div class="feature-card scroll-fade-up delay-100">
                     <div class="feature-icon-wrapper">
-                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="./egg/002.png" alt="生存冒险" class="feature-icon" loading="lazy">
+                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="./egg/002.png" alt="跨版互通" class="feature-icon" loading="lazy">
                     </div>
-                    <h3>纯净生存</h3>
-                    <p>原汁原味的生存体验，配合精心调整的平衡性，让每一次探索都充满乐趣。</p>
+                    <h3>跨版互通</h3>
+                    <p>无论是 Java 版还是基岩版玩家，都能顺畅加入服务器，与好友一起探索世界。</p>
                 </div>
 
                 <!-- Feature 2 -->
                 <div class="feature-card scroll-fade-up delay-200">
                     <div class="feature-icon-wrapper">
-                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="./egg/003.png" alt="RPG系统" class="feature-icon" loading="lazy">
+                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="./egg/003.png" alt="领地系统" class="feature-icon" loading="lazy">
                     </div>
-                    <h3>RPG系统</h3>
-                    <p>独特的职业与技能系统，挑战强大的副本BOSS，获取传说级装备。</p>
+                    <h3>领地系统</h3>
+                    <p>使用 /dom 指令管理自己的领地，防止赛博资产被恶意破坏，安心建造。</p>
                 </div>
 
                 <!-- Feature 3 -->
                 <div class="feature-card scroll-fade-up delay-300">
                     <div class="feature-icon-wrapper">
-                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="./egg/001.png" alt="建筑创造" class="feature-icon" loading="lazy">
+                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="./egg/001.png" alt="安全回档" class="feature-icon" loading="lazy">
                     </div>
-                    <h3>建筑创造</h3>
-                    <p>超大领地保护，丰富的装饰性方块，让你的建筑才华得到完美展示。</p>
+                    <h3>安全回档</h3>
+                    <p>部署了 CoreProtect 插件，如遇意外可快速恢复建筑与财产，游玩无后顾之忧。</p>
                 </div>
             </div>
         </div>
@@ -313,7 +316,7 @@
         <div class="container">
             <div class="section-header scroll-fade-up">
                 <h2 class="section-title">游戏截图</h2>
-                <p class="section-subtitle">每一帧都是壁纸，记录我们在服务器的点点滴滴</p>
+                <p class="section-subtitle">每一帧都是风景，记录橙猫服务器的精彩瞬间</p>
             </div>
 
             <div class="gallery-carousel-container">
@@ -323,7 +326,7 @@
                 
                 <div class="gallery-controls">
                     <div class="gallery-text-content">
-                        <p id="galleryDescription">建造庞大的定居点或简朴的土屋。这个世界由你尽情创造！</p>
+                        <p id="galleryDescription">温馨的主城地区</p>
                     </div>
                     <div class="gallery-nav-buttons">
                         <button class="nav-btn prev-btn" id="prevBtn">
@@ -347,7 +350,7 @@
         <div class="container">
             <div class="section-header scroll-fade-up">
                 <h2 class="section-title">管理团队</h2>
-                <p class="section-subtitle">专业的运营团队，致力于为您提供最好的游戏体验</p>
+                <p class="section-subtitle">热爱 Minecraft 的运营者，用心维护这片方块世界</p>
             </div>
 
             <div class="team-carousel-container scroll-fade-up delay-200">
@@ -355,52 +358,22 @@
                     <!-- Team Member 1 -->
                     <div class="team-card">
                         <div class="team-avatar">
-                            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="./egg/cat.jpg" alt="服主头像" loading="lazy">
+                            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="./egg/cat.jpg" alt="腐竹头像" loading="lazy">
                         </div>
-                        <h3 class="team-name">服主</h3>
+                        <h3 class="team-name">腐竹</h3>
                         <p class="team-role">Server Owner</p>
-                        <p class="team-desc">负责服务器整体规划与运营，确保服务器长期稳定运行。</p>
-                        <a href="#" class="team-contact-btn">联系我</a>
+                        <p class="team-desc">橙猫服务器的创建者与维护者，负责服务器整体运营。</p>
+                        <a href="mailto:admin@ambercat.top" class="team-contact-btn">联系我</a>
                     </div>
                     <!-- Team Member 2 -->
                     <div class="team-card">
                         <div class="team-avatar">
-                            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="./egg/cat2.jpg" alt="技术管理头像" loading="lazy">
+                            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="./egg/cat2.jpg" alt="管理员头像" loading="lazy">
                         </div>
-                        <h3 class="team-name">技术管理</h3>
-                        <p class="team-role">Technical Admin</p>
-                        <p class="team-desc">负责插件配置、Bug修复及服务器性能优化。</p>
-                        <a href="#" class="team-contact-btn">联系我</a>
-                    </div>
-                    <!-- Team Member 3 -->
-                    <div class="team-card">
-                        <div class="team-avatar">
-                            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="./egg/cat3.jpg" alt="社区巡查头像" loading="lazy">
-                        </div>
-                        <h3 class="team-name">社区巡查</h3>
-                        <p class="team-role">Moderator</p>
-                        <p class="team-desc">维护游戏秩序，处理玩家纠纷，营造良好社区氛围。</p>
-                        <a href="#" class="team-contact-btn">联系我</a>
-                    </div>
-                    <!-- Team Member 4 -->
-                    <div class="team-card">
-                        <div class="team-avatar">
-                            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="./egg/dsb.JPG" alt="建筑师头像" loading="lazy">
-                        </div>
-                        <h3 class="team-name">建筑师</h3>
-                        <p class="team-role">Builder</p>
-                        <p class="team-desc">负责主城及公共设施的建筑设计与搭建。</p>
-                        <a href="#" class="team-contact-btn">联系我</a>
-                    </div>
-                    <!-- Team Member 5-->
-                    <div class="team-card">
-                        <div class="team-avatar">
-                            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="./egg/dsb2.jpg" alt="外挂巡查头像" loading="lazy">
-                        </div>
-                        <h3 class="team-name">外挂巡查</h3>
-                        <p class="team-role">Externals</p>
-                        <p class="team-desc">专门负责巡查玩家是否使用外挂，确保游戏公平性。</p>
-                        <a href="#" class="team-contact-btn">联系我</a>
+                        <h3 class="team-name">管理员</h3>
+                        <p class="team-role">Admin</p>
+                        <p class="team-desc">协助腐竹管理服务器日常事务，维护游戏秩序。</p>
+                        <a href="mailto:3665822645@qq.com" class="team-contact-btn">联系我</a>
                     </div>
                 </div>
             </div>
@@ -414,7 +387,7 @@
         <div class="container">
             <div class="section-header scroll-fade-up">
                 <h2 class="section-title">联系我们</h2>
-                <p class="section-subtitle">有任何问题或建议？通过邮件直接联系服主</p>
+                <p class="section-subtitle">有任何问题或建议？通过邮件直接联系我们</p>
             </div>
 
             <div class="contact-container scroll-fade-up delay-200">
@@ -509,7 +482,7 @@
         <div class="container">
             <div class="section-header scroll-fade-up">
                 <h2 class="section-title">加入社区</h2>
-                <p class="section-subtitle">加入我们的玩家交流群，获取最新资讯与福利</p>
+                <p class="section-subtitle">扫描二维码加入 QQ 群，与玩家实时交流</p>
             </div>
 
             <div class="community-grid">
@@ -519,26 +492,14 @@
                         <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="./png/QQ.png" alt="QQ群" class="community-icon-img" loading="lazy">
                     </div>
                     <h3>官方QQ群</h3>
-                    <p>与其他玩家实时交流，获取最新公告</p>
+                    <p>获取白名单、最新公告，与服务器玩家实时交流</p>
                     <div class="qr-placeholder">
-                        <div class="qr-code"></div>
+                        <div class="qr-code">
+                            <img src="egg/qq_qr.jpg" alt="QQ群二维码" style="width:100%;height:100%;object-fit:contain;" onerror="this.parentNode.innerHTML='<div style=&quot;width:100%;height:100%;&quot;></div>'">
+                        </div>
                         <span>扫码加入QQ群</span>
                     </div>
-                    <a href="#" class="community-btn qq-btn">点击加入群聊</a>
-                </div>
-
-                <!-- WeChat Group Card -->
-                <div class="community-card scroll-fade-up delay-200">
-                    <div class="community-icon-wrapper">
-                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="./png/WX.png" alt="微信群" class="community-icon-img" loading="lazy">
-                    </div>
-                    <h3>微信交流群</h3>
-                    <p>关注微信群，不错过任何活动通知</p>
-                    <div class="qr-placeholder">
-                        <div class="qr-code"></div>
-                        <span>扫码加入微信群</span>
-                    </div>
-                    <a href="#" class="community-btn wechat-btn">点击加入群聊</a>
+                    <a href="https://qm.qq.com/cgi-bin/qm/qr?k=992719293" class="community-btn qq-btn">点击加入群聊</a>
                 </div>
             </div>
         </div>
@@ -549,11 +510,11 @@
         <div class="container footer-container">
             <div class="footer-brand">
                 <a href="#" class="footer-logo" id="footerLogo">
-                    <svg class="footer-logo-svg" width="24" height="24"><use href="#icon-cube"/></svg>
-                    <span class="footer-logo-text">我的世界服务器</span>
+                    <img class="footer-logo-svg" src="png/icon.png" alt="logo" width="24" height="24" style="border-radius:4px;">
+                                        <span class="footer-logo-text">橙猫生存服务器</span>
                 </a>
                 <p class="footer-desc">
-                    由专业团队倾力打造的大型多人在线游戏，致力于为玩家提供最优质的游戏体验与最温馨的社区氛围。
+                    橙猫生存服务器 — 一个纯粹、温馨、持久的 Minecraft 生存家园。Java 版与基岩版跨版本互通，友善社区，和谐互助。
                 </p>
             </div>
             
@@ -581,7 +542,8 @@
                     <ul id="footerFriendLinks">
                         <li><a href="https://mc.163.com/">我的世界官网</a></li>
                         <li><a href="https://www.minecraft.net/">我的世界国际服</a></li>
-                        <li><a href="#">我不知道写什么了</a></li>
+                        <li><a href="https://maps.ambercat.top">服务器网页地图</a></li>
+                        <li><a href="https://www.wdsjfwq.com/server-1685.html">服务器站</a></li>
                     </ul>
                 </div>
             </div>

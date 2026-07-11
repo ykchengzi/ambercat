@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="橙猫生存服务器 - 在线玩家列表">
+    <title>在线玩家 - 橙猫生存服务器</title>
+    <link rel="icon" type="image/png" href="png/icon.png">
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.157.0/examples/jsm/",
+            "skinview3d": "https://cdn.jsdelivr.net/npm/skinview3d@3.4.2/+esm"
+        }
+    }
+    </script>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --accent-green: #22c55e;
+            --accent-red: #ef4444;
+            --accent-gold: #f59e0b;
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            --transition: all 0.3s ease;
+        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(34,197,94,0.06) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255,255,255,0.04) 0%, transparent 20%);
+        }
+
+        /* ── Header ── */
+        .header {
+            padding: 20px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: var(--glass-border);
+            background: rgba(255,255,255,0.02);
+            backdrop-filter: blur(12px);
+            position: sticky; top: 0; z-index: 10;
+        }
+        .header-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
+        .header-logo { width: 36px; height: 36px; border-radius: 8px; }
+        .header-title { font-size: 1.1rem; font-weight: 700; }
+        .header-back {
+            padding: 8px 18px; border-radius: 8px;
+            border: var(--glass-border); background: rgba(255,255,255,0.05);
+            color: var(--text-muted); cursor: pointer; font-size: 0.9rem;
+            text-decoration: none; transition: var(--transition);
+        }
+        .header-back:hover { background: rgba(255,255,255,0.1); color: var(--text-main); }
+
+        /* ── Main ── */
+        .main { max-width: 900px; margin: 0 auto; padding: 32px 24px 60px; }
+
+        /* ── Status Bar ── */
+        .status-bar {
+            display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+            padding: 20px 24px; border-radius: 16px;
+            background: var(--bg-card); border: var(--glass-border);
+            backdrop-filter: blur(8px); margin-bottom: 32px;
+        }
+        .status-dot {
+            width: 14px; height: 14px; border-radius: 50%;
+            background: var(--accent-green);
+            box-shadow: 0 0 12px var(--accent-green);
+            flex-shrink: 0;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .status-info { flex: 1; min-width: 0; }
+        .status-count { font-size: 1.5rem; font-weight: 700; }
+        .status-count .num { color: var(--accent-green); font-size: 2rem; }
+        .status-sub { font-size: 0.85rem; color: var(--text-muted); margin-top: 2px; }
+        .status-refresh {
+            padding: 10px 20px; border-radius: 10px;
+            border: var(--glass-border); background: rgba(255,255,255,0.05);
+            color: var(--text-muted); cursor: pointer; font-size: 0.9rem;
+            transition: var(--transition); white-space: nowrap;
+        }
+        .status-refresh:hover { background: rgba(255,255,255,0.1); color: var(--text-main); }
+        .status-refresh svg { width: 14px; height: 14px; vertical-align: -1px; margin-right: 4px; }
+
+        /* ── Player Grid ── */
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .player-card {
+            display: flex; align-items: center; gap: 14px;
+            padding: 16px; border-radius: 14px;
+            background: var(--bg-card); border: var(--glass-border);
+            backdrop-filter: blur(4px); transition: var(--transition);
+        }
+        .player-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .player-head {
+            width: 48px; height: 48px; border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            image-rendering: pixelated;
+            flex-shrink: 0; cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .player-head:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 12px rgba(34,197,94,0.5);
+        }
+        .player-info { min-width: 0; }
+        .player-name {
+            font-weight: 600; font-size: 0.95rem;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .player-id {
+            font-size: 0.75rem; color: var(--text-muted);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        /* ── States ── */
+        .state { text-align: center; padding: 60px 20px; }
+        .state-icon { font-size: 3rem; margin-bottom: 16px; }
+        .state-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; }
+        .state-desc { color: var(--text-muted); font-size: 0.95rem; max-width: 400px; margin: 0 auto; }
+
+        .loading-dots { display: flex; justify-content: center; gap: 8px; margin: 16px 0; }
+        .loading-dots span {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: var(--accent-green);
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 600px) {
+            .header { padding: 14px 16px; }
+            .header-title { font-size: 1rem; }
+            .main { padding: 20px 16px 40px; }
+            .status-bar { padding: 16px; gap: 10px; }
+            .status-count { font-size: 1.2rem; }
+            .status-count .num { font-size: 1.5rem; }
+            .players-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ── Motd Banner ── */
+        .motd-banner {
+            padding: 10px 20px; border-radius: 10px;
+            background: rgba(255,215,0,0.08); border: 1px solid rgba(255,215,0,0.15);
+            text-align: center; font-size: 0.9rem; color: var(--accent-gold);
+            margin-bottom: 24px; word-break: break-all;
+        }
+        .motd-banner.hidden { display: none; }
+
+        /* ── Skin Modal ── */
+        .skin-modal {
+            display: none; position: fixed; inset: 0; z-index: 1000;
+            background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
+            justify-content: center; align-items: center; padding: 20px;
+        }
+        .skin-modal.open { display: flex; }
+        .skin-modal-card {
+            background: #1e293b; border: var(--glass-border);
+            border-radius: 16px; padding: 24px;
+            max-width: 420px; width: 100%; text-align: center;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+            animation: modalIn 0.2s ease;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.9) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .skin-modal-close {
+            float: right; background: none; border: none;
+            color: var(--text-muted); font-size: 1.5rem; cursor: pointer;
+            line-height: 1; padding: 0 4px;
+        }
+        .skin-modal-close:hover { color: var(--text-main); }
+        .skin-modal-name { font-size: 1.2rem; font-weight: 700; margin: 8px 0 4px; }
+        .skin-modal-uuid { font-size: 0.75rem; color: var(--text-muted); word-break: break-all; margin-bottom: 16px; }
+        .skin-render { width: 100%; max-width: 260px; height: 360px; display: block; margin: 0 auto; border-radius: 8px; }
+        .skin-render-hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; }
+        .skin-modal-error { color: var(--accent-gold); font-size: 0.9rem; padding: 20px 0; }
+        .skin-modal-loading { color: var(--text-muted); padding: 20px 0; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a class="header-brand" href="index.html">
+            <img class="header-logo" src="png/icon.png" alt="logo" width="36" height="36" style="border-radius:8px;">
+            <span class="header-title">橙猫生存服务器</span>
+        </a>
+        <a class="header-back" href="index.html">← 返回主页</a>
+    </header>
+
+    <main class="main">
+        <!-- Loading -->
+        <div id="loadingState" class="state">
+            <div class="loading-dots">
+                <span></span><span></span><span></span>
+            </div>
+            <p class="state-desc">正在获取服务器状态…</p>
+        </div>
+
+        <!-- Content (hidden initially) -->
+        <div id="contentState" hidden>
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <span class="status-dot" id="statusDot"></span>
+                <div class="status-info">
+                    <div class="status-count">在线玩家: <span class="num" id="playerCount"></span></div>
+                    <div class="status-sub" id="statusSub"></div>
+                </div>
+                <button class="status-refresh" id="refreshBtn" title="手动刷新">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="23 4 23 10 17 10"/>
+                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                    </svg>
+                    刷新
+                </button>
+            </div>
+
+            <!-- MOTD -->
+            <div class="motd-banner hidden" id="motdBanner"></div>
+
+            <!-- Player Cards -->
+            <div class="players-grid" id="playersGrid"></div>
+        </div>
+
+        <!-- Offline State -->
+        <div id="offlineState" hidden>
+            <div class="state">
+                <div class="state-icon">🔴</div>
+                <div class="state-title">服务器离线</div>
+                <p class="state-desc">当前无法连接到服务器，请稍后再试。如果长时间无法连接，请加入 QQ 群咨询。</p>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" hidden>
+            <div class="state">
+                <div class="state-icon">⚠️</div>
+                <div class="state-title">获取数据失败</div>
+                <p class="state-desc">无法获取服务器状态数据，可能是 API 接口异常或网络问题。</p>
+                <button class="status-refresh" id="errorRetryBtn" style="margin-top:16px;padding:10px 28px;">重试</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+    (function () {
+        'use strict';
+
+        // ── Config ──
+                        var API_URL = 'http://chengmao.jkun.cf:36779/open-api/players';
+        var API_KEY = '';
+        var REFRESH_INTERVAL = 30000; // 30s
+
+        // ── DOM ──
+        var els = {
+            loading:   document.getElementById('loadingState'),
+            content:   document.getElementById('contentState'),
+            offline:   document.getElementById('offlineState'),
+            error:     document.getElementById('errorState'),
+            dot:       document.getElementById('statusDot'),
+            count:     document.getElementById('playerCount'),
+            sub:       document.getElementById('statusSub'),
+            motd:      document.getElementById('motdBanner'),
+            grid:      document.getElementById('playersGrid'),
+            refresh:   document.getElementById('refreshBtn'),
+            retry:     document.getElementById('errorRetryBtn')
+        };
+
+        function show(state) {
+            els.loading.hidden = (state !== 'loading');
+            els.content.hidden = (state !== 'content');
+            els.offline.hidden = (state !== 'offline');
+            els.error.hidden  = (state !== 'error');
+        }
+
+        function fmtTime(ts) {
+            var d = new Date(ts);
+            var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+            return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+        }
+
+        // ── Render ──
+        function render(data) {
+            var allPlayers = (data && Array.isArray(data.players)) ? data.players : [];
+            var onlinePlayers = [];
+            for (var i = 0; i < allPlayers.length; i++) {
+                if (allPlayers[i].isOnline) onlinePlayers.push(allPlayers[i]);
+            }
+            var online = onlinePlayers.length;
+
+            if (data.code !== 200 || allPlayers.length === 0) {
+                // 接口正常但玩家列表为空 → 可能服务器离线
+                show('offline');
+                return;
+            }
+
+            show('content');
+
+            // Status dot + count
+            els.dot.className = 'status-dot';
+            els.count.textContent = String(online);
+            els.count.className = 'num';
+            els.sub.textContent = '最后更新: ' + fmtTime(Date.now()) + ' | 每30秒自动刷新';
+
+            // MOTD: hide (not available in /open-api/players)
+            els.motd.classList.add('hidden');
+
+            // Player cards
+            els.grid.innerHTML = '';
+            if (onlinePlayers.length === 0) {
+                var emptyCard = document.createElement('div');
+                emptyCard.className = 'player-card';
+                emptyCard.style.gridColumn = '1 / -1';
+                emptyCard.style.justifyContent = 'center';
+                emptyCard.style.padding = '32px';
+                emptyCard.style.color = 'var(--text-muted)';
+                emptyCard.textContent = '暂无在线玩家';
+                els.grid.appendChild(emptyCard);
+            } else {
+                onlinePlayers.forEach(function (p) {
+                    var card = document.createElement('div');
+                    card.className = 'player-card';
+
+                    var headUrl = 'https://mc-heads.net/avatar/' + encodeURIComponent(p.name) + '/64';
+
+                    card.innerHTML =
+                        '<img class="player-head" src="' + headUrl + '" alt="' + p.name + '" ' +
+                        'title="点击查看正版皮肤" loading="lazy" ' +
+                        'onclick="showSkin(\'' + p.name.replace(/'/g, "\\'") + '\')" ' +
+                        'onerror="this.src=\'data:image/svg+xml,' +
+                        '<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22>' +
+                        '<rect fill=%22%23374151%22 width=%2264%22 height=%2264%22 rx=%2232%22/>' +
+                        '<text fill=%22%2394a3b8%22 x=%2232%22 y=%2240%22 text-anchor=%22middle%22 font-size=%2220%22>?</text>' +
+                        '</svg>\'">';
+                    card.innerHTML += '<div class="player-info">' +
+                        '<div class="player-name">' + (p.name) + '</div>' +
+                        '<div class="player-id">' + (p.gamemode || '') + '</div>' +
+                        '</div>';
+
+                    els.grid.appendChild(card);
+                });
+            }
+        }
+
+        // ── Fetch ──
+        function fetchData(showLoading) {
+            if (showLoading) show('loading');
+
+            var headers = { 'Accept': 'application/json' };
+            if (API_KEY) headers['Authorization'] = 'Bearer ' + API_KEY;
+
+            fetch(API_URL, { method: 'GET', headers: headers })
+                .then(function (r) {
+                    if (!r.ok) throw new Error('HTTP ' + r.status);
+                    return r.json();
+                })
+                .then(function (data) {
+                    render(data);
+                })
+                .catch(function (err) {
+                    console.error('玩家页面 API 请求失败:', err);
+                    show('error');
+                });
+        }
+
+        // ── Init ──
+        els.refresh.addEventListener('click', function () { fetchData(true); });
+        els.retry.addEventListener('click', function () { fetchData(true); });
+
+        fetchData(true);
+        setInterval(function () { fetchData(false); }, REFRESH_INTERVAL);
+    })();
+    </script>
+
+    <!-- Skin Viewer Modal -->
+    <div class="skin-modal" id="skinModal">
+        <div class="skin-modal-card">
+            <button class="skin-modal-close" id="skinModalClose">&times;</button>
+            <div id="skinModalBody"></div>
+            <canvas id="skinCanvas" class="skin-render" style="display:none;"></canvas>
+            <div class="skin-render-hint" id="skinHint" style="display:none;">🖱 拖拽旋转 | 滚轮缩放</div>
+        </div>
+    </div>
+
+    <script type="module">
+    import * as THREE from 'three';
+    import { SkinViewer, WalkingAnimation } from 'skinview3d';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    var modal = document.getElementById('skinModal');
+    var modalBody = document.getElementById('skinModalBody');
+    var canvas = document.getElementById('skinCanvas');
+    var hint = document.getElementById('skinHint');
+    var modalClose = document.getElementById('skinModalClose');
+
+    var currentViewer = null;
+    var currentControls = null;
+    var currentAnimId = null;
+
+    function destroyViewer() {
+        if (currentViewer) {
+            try { currentViewer.dispose(); } catch(e) {}
+            currentViewer = null;
+        }
+        if (currentControls) { currentControls.dispose(); currentControls = null; }
+        if (currentAnimId) { cancelAnimationFrame(currentAnimId); currentAnimId = null; }
+        canvas.style.display = 'none';
+        hint.style.display = 'none';
+    }
+
+    function closeSkin() {
+        destroyViewer();
+        modal.classList.remove('open');
+        modalBody.innerHTML = '';
+    }
+    modalClose.addEventListener('click', closeSkin);
+    modal.addEventListener('click', function (e) { if (e.target === modal) closeSkin(); });
+
+    function build3DViewer(skinUrl, playerName) {
+        destroyViewer();
+        canvas.style.display = 'block';
+        hint.style.display = 'block';
+        canvas.width = 260;
+        canvas.height = 360;
+
+        var viewer = new SkinViewer({
+            canvas: canvas,
+            width: 260,
+            height: 360,
+            skin: skinUrl
+        });
+        currentViewer = viewer;
+
+        // Camera position
+        viewer.camera.position.set(0, 0, 50);
+        viewer.camera.lookAt(0, -5, 0);
+
+        // Orbit controls
+        var controls = new OrbitControls(viewer.camera, canvas);
+        controls.enableRotate = true;
+        controls.enableZoom = true;
+        controls.enablePan = false;
+        controls.minDistance = 30;
+        controls.maxDistance = 80;
+        controls.target.set(0, 2, 0);
+        controls.update();
+        currentControls = controls;
+
+        // Animation
+        viewer.animations.add(WalkingAnimation);
+
+        // Render loop
+        var clock = new THREE.Clock();
+        function animate() {
+            currentAnimId = requestAnimationFrame(animate);
+            var delta = clock.getDelta();
+            if (viewer.animations) {
+                try {
+                    var anims = viewer.animations;
+                    // skinview3d v3 uses a Map or Set for animations
+                    if (anims instanceof Map) {
+                        anims.forEach(function (a) { a.update(delta); });
+                    } else if (anims.forEach) {
+                        anims.forEach(function (a) { a.update(delta); });
+                    }
+                } catch(e) {}
+            }
+            controls.update();
+            viewer.render();
+        }
+        animate();
+    }
+
+    window.showSkin = function (playerName) {
+        modal.classList.add('open');
+        destroyViewer();
+        modalBody.innerHTML = '<div class="skin-modal-name">' + playerName + '</div>' +
+            '<div class="skin-modal-loading">正在查询正版皮肤…</div>';
+
+        fetch('https://uapis.cn/api/v1/game/minecraft/userinfo?username=' + encodeURIComponent(playerName))
+            .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+            .then(function (data) {
+                if (data && data.skin_url && data.uuid) {
+                    modalBody.innerHTML =
+                        '<div class="skin-modal-name">' + data.username + '</div>' +
+                        '<div class="skin-modal-uuid">UUID: ' + data.uuid + '</div>';
+                    build3DViewer(data.skin_url, data.username);
+                } else {
+                    modalBody.innerHTML =
+                        '<div class="skin-modal-name">' + playerName + '</div>' +
+                        '<div class="skin-modal-error">此玩家非正版，无法查看皮肤</div>';
+                }
+            })
+            .catch(function (err) {
+                if (err === 404) {
+                    modalBody.innerHTML =
+                        '<div class="skin-modal-name">' + playerName + '</div>' +
+                        '<div class="skin-modal-error">此玩家非正版，无法查看皮肤</div>';
+                } else {
+                    modalBody.innerHTML =
+                        '<div class="skin-modal-name">' + playerName + '</div>' +
+                        '<div class="skin-modal-error">查询失败，请稍后重试</div>';
+                }
+            });
+    };
+    </script>
+</body>
+</html>

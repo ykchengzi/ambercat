@@ -604,6 +604,11 @@
             [0, 1].forEach(function (i) {
                 if (!cards[i]) return;
                 var prefix = i === 0 ? 'qq' : 'wechat';
+                if (i === 1 && !data[prefix + '_text']) {
+                    cards[i].style.display = 'none';
+                    return;
+                }
+                if (i === 1) cards[i].style.display = '';
                 safeText(cards[i].querySelector('h3'), data[prefix + '_text'] || '');
                 safeText(cards[i].querySelector('p'),  data[prefix + '_desc'] || '');
                 var qr = cards[i].querySelector('.qr-code');
@@ -643,17 +648,94 @@
     };
 
     // ============================================================
-    // 9. ServerStatus —— 在线人数（来自静态数据）
+    // 9. ServerStatus —— 在线人数（API: MCSManager 开放 API /openapi/info）
     // ============================================================
     var serverStatus = {
-        init: function () {
+        _cache: null,   // 缓存最近一次结果，避免短时间内反复请求
+        _ts: 0,
+        TTL: 30000,     // 30 秒缓存
+
+        _renderOnline: function (online) {
             var dot       = $('.status-dot');
             var container = $('.status-text');
             var text      = $('.highlight-green');
-            var ss        = (DATA.server_status) || {};
-            var mode      = ss.mode || 'static';
+            if (!container) return;
+
+            container.textContent = '';
+            container.append('服务器在线: ');
+            var s = document.createElement('span');
+            s.className = 'highlight-green';
+            s.textContent = String(online);
+            container.appendChild(s);
+            container.append(' 玩家');
+
+            if (dot) {
+                var c = '#22c55e';
+                dot.style.backgroundColor = c;
+                dot.style.boxShadow = '0 0 10px ' + c;
+            }
+        },
+
+        _renderOffline: function () {
+            var dot       = $('.status-dot');
+            var container = $('.status-text');
+            if (container) {
+                container.textContent = '服务器离线';
+            }
+            if (dot) {
+                dot.style.backgroundColor = '#ef4444';
+                dot.style.boxShadow = '0 0 10px #ef4444';
+            }
+        },
+
+        _renderStatic: function (ss) {
+            var container = $('.status-text');
+            if (!container) return;
+            container.textContent = '';
+            container.append((ss.static_text || '当前') + ': ');
+            var s = document.createElement('span');
+            s.className = 'highlight-green';
+            s.textContent = ss.static_value || '--';
+            container.appendChild(s);
+            container.append(' 玩家');
+        },
+
+        _fetchFromApi: function (ss) {
+            var self = this;
+            var url  = ss.api_url;
+            if (!url) { self._renderStatic(ss); return; }
+
+            var headers = { 'Accept': 'application/json' };
+            if (ss.api_key) {
+                headers['Authorization'] = 'Bearer ' + ss.api_key;
+            }
+
+            fetch(url, { method: 'GET', headers: headers })
+                .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+                .then(function (data) {
+                    // /open-api/players 返回 { code, players: [{name, isOnline, uuid}] }
+                    var list = (data && Array.isArray(data.players)) ? data.players : null;
+                    if (!list) { self._renderOffline(); return; }
+                    var online = 0;
+                    for (var i = 0; i < list.length; i++) {
+                        if (list[i].isOnline) online++;
+                    }
+                    self._cache = online;
+                    self._ts = Date.now();
+                    self._renderOnline(online);
+                })
+                .catch(function () {
+                    // 拉取失败时回退到静态文案
+                    self._renderStatic(ss);
+                });
+        },
+
+        init: function () {
+            var ss = (DATA.server_status) || {};
+            var mode = ss.mode || 'static';
 
             if (state.siteMode === 'netease') {
+                var container = $('.status-text');
                 if (container) {
                     container.textContent = '';
                     container.append('最多可支持 ');
@@ -667,33 +749,16 @@
             }
 
             if (mode === 'api') {
-                if (text) text.textContent = '加载中...';
-                fetch('admin/public_api.php?act=server_status')
-                    .then(function (r) { return r.ok ? r.json() : null; })
-                    .then(function (res) {
-                        if (res && res.success && res.data) {
-                            if (text) text.textContent = res.data.p;
-                        } else {
-                            if (text) text.textContent = '离线';
-                            if (dot)  dot.style.backgroundColor = '#ef4444';
-                        }
-                    })
-                    .catch(function () {
-                        if (text) text.textContent = '离线';
-                        if (dot) { dot.style.backgroundColor = '#ef4444'; dot.style.boxShadow = '0 0 10px #ef4444'; }
-                    });
-            } else {
-                // 静态模式
-                if (container && ss.static_text) {
-                    var val = ss.static_value || '--';
-                    container.textContent = '';
-                    container.append(ss.static_text + ': ');
-                    var s = document.createElement('span');
-                    s.className = 'highlight-green';
-                    s.textContent = val;
-                    container.appendChild(s);
-                    container.append(' 玩家');
+                // 有缓存且未过期：直接渲染
+                if (this._cache !== null && (Date.now() - this._ts) < this.TTL) {
+                    this._renderOnline(this._cache);
                 }
+                this._fetchFromApi(ss);
+                // 周期性刷新
+                var self = this;
+                setInterval(function () { self._fetchFromApi(ss); }, this.TTL);
+            } else {
+                this._renderStatic(ss);
             }
         }
     };
