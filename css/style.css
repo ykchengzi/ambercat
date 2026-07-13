@@ -583,6 +583,12 @@ body.has-announcement-popup {
     .contact-container { padding: 20px; margin: 0 15px; }
     .contact-grid { grid-template-columns: 1fr; gap: 30px; }
     .contact-rules { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-right: 0; padding-bottom: 30px; }
+    /* 窄屏防止说明文字撑破容器：允许 flex 子项收缩并断词换行 */
+    .rules-title { font-size: 1.25rem; min-width: 0; flex-wrap: wrap; overflow-wrap: anywhere; }
+    .rules-list li { min-width: 0; }
+    .rule-text { min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
+    .section-title { font-size: 1.9rem; }
+    .section-subtitle { font-size: 1rem; }
 
     .footer-container { flex-direction: column; gap: 40px; }
     .footer-links { width: 100%; flex-direction: column; gap: 30px; }
