@@ -105,6 +105,7 @@ window.__FOXMC_STATIC_DATA__ = {
     desc:      "橙猫生存服务器 — 一个纯粹、温馨、持久的 Minecraft 生存家园。Java 版与基岩版跨版本互通，友善社区，和谐互助。",
     copyright: "\u00a9 2025 橙猫生存服务器. All rights reserved.",
     friend_links: [
+      { name: "橘猫服官方网站",   url: "https://jumaomc.rth1.xyz/" },
       { name: "我的世界官网",     url: "https://mc.163.com/" },
       { name: "我的世界国际服",  url: "https://www.minecraft.net/" },
       { name: "服务器网页地图",  url: "https://maps.ambercat.top" },
@@ -121,10 +122,10 @@ window.__FOXMC_STATIC_DATA__ = {
   },
 
   // ---- 服务器在线状态 ----
-  // "api" 模式通过 allorigins.win 代理解决跨域
+  // "api" 模式通过 proxy.cors.sh 代理解决跨域（用法：https://proxy.cors.sh/<目标URL>）
   server_status: {
     mode: "api",
-    api_url: "https://api.allorigins.win/raw?url=http://chengmao.jkun.cf:36779/open-api/players",
+    api_url: "https://proxy.cors.sh/http://chengmao.jkun.cf:36779/open-api/players",
     api_key: "",
     // 静态模式下的兜底显示
     static_text: "最大在线",
